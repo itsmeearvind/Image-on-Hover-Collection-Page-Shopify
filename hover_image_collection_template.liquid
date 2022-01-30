@@ -1,0 +1,101 @@
+<div class="section__container collection__template" data-section-type="collection-template">
+  <div id="collection_page">
+    <!--  Collection Banner  -->
+    <div class="colllection__product-banner">
+      <div class="collection__image">
+        {% if collection.image %}
+        <div class="collecton_img">
+          {{ collection.image | image_url: width: 2048 | image_tag }}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <!--  Collection Product Grid  -->
+    <div class="colllection__product-grid">
+      <div class="collection--template">
+        <div class="container">
+          <div class="collection__breadcrumb">
+            <div class="col">
+              {% if settings.breadcrumb_pr %}
+              <nav class="sp-breadcrumb">
+                <a href="{{ routes.root_url }}" class="dib">{{ 'general.breadcrumbs.home' | t }}</a>
+                {% if collection.url != blank %}
+                <i class="facl facl-angle-right"></i>
+                <a href="{{collection.url}}" class="dib">{{collection.title}}</a>
+                {% endif %}
+              </nav>
+              {% endif %}
+            </div>
+          </div>
+          <div class="collection__product_count">
+            <div class="grid_product_count">
+              <p>SHOWING {{ collection.products_count }} RESULTS</p>
+            </div>
+          </div>
+          <div class="template__collection">
+            <div class="product__card">
+              {% for product in collection.products %}
+              <div class="product__ftr_image">
+                <div class="reveal">
+                  <a href="{{product.url}}" class="img_prod_url">
+                    <img src="{{ product.featured_image | img_url: '350x350' }}" alt="{{ product.featured_image.alt | escape }}">
+                    <div class="hidden">
+                      <img src="{{ product.images.last | img_url: '350x350' }}" alt="{{ product.images.last.alt | escape }}" />
+                      <div class="caption">
+                        <div class="centered">
+                           + QUICK VIEW
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+                <div class="product__details_collections">
+                  <div class="product__rating_star"></div>
+                  <div class="product__title_collection">
+                    <a href="{{product.url}}" class="product_url">
+                      <p class="coll__prod_title"><strong>{{product.title}}</strong></p>
+                    </a>
+                    <div class="coll__product_short_info">
+                      <p>{{product.description | truncatewords: 15}}</p>
+                    </div>
+                  </div>
+                  <div class="coll_product_variants">
+                    <div class="variant__list">
+                      <ul class="variant-list-ul dropdown-view">
+                        {% for variant in product.variants %}
+                        <li class="product_variant" data-variant="{{variant.id}}">
+                          <span>{{variant.title }}</span>| 
+                          <span>{{variant.compare_at_price | money}}
+                          </span><span>{{variant.price | money}}</span>
+                          {% if forloop.first %}<span class="down__arrow"></span>{% endif %}
+                        </li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="coll__product_cart_btn">
+                    <div class="addtocart__btn_from">
+                      <form method="post" action="/cart/add" class="collection__prod_form">
+                        <input type="hidden" name="id" value="{{product.selected_or_first_available_variant.id}}">
+                        <div class="add_to_cart_btn_col">
+                          <button type="submit" name="add" class="btn_atc_col">ADD TO CART</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Collection",
+    "settings": []
+  }
+{% endschema %}
